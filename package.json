@@ -1,6 +1,6 @@
 {
   "name": "@veldica/prose-tokenizer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Deterministic, rule-based prose tokenizer for English and Markdown. High-precision splitting for paragraphs, sentences, and words with character-accurate offsets.",
   "type": "module",
   "main": "./dist/index.js",
