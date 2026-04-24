@@ -72,7 +72,8 @@
   "homepage": "https://veldica.com/prose-tokenizer",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "files": [
     "dist",
