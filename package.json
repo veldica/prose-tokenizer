@@ -1,7 +1,7 @@
 {
   "name": "@veldica/prose-tokenizer",
-  "version": "1.0.0",
-  "description": "Deterministic, rule-based prose tokenizer for English and Markdown. Precise splitting for paragraphs, sentences, and words with character-accurate offsets.",
+  "version": "1.1.0",
+  "description": "Deterministic, rule-based prose tokenizer for English and Markdown. High-precision splitting for paragraphs, sentences, and words with character-accurate offsets.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,6 +9,22 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./words": {
+      "types": "./dist/words.d.ts",
+      "import": "./dist/words.js"
+    },
+    "./sentences": {
+      "types": "./dist/sentences.d.ts",
+      "import": "./dist/sentences.js"
+    },
+    "./paragraphs": {
+      "types": "./dist/paragraphs.d.ts",
+      "import": "./dist/paragraphs.js"
+    },
+    "./markdown": {
+      "types": "./dist/markdown.d.ts",
+      "import": "./dist/markdown.js"
     },
     "./package.json": "./package.json"
   },
@@ -25,6 +41,8 @@
     "tokenizer",
     "tokenization",
     "sentence-splitter",
+    "sentence-segmentation",
+    "text-segmentation",
     "prose",
     "markdown",
     "text-analysis",

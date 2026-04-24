@@ -12,7 +12,8 @@ The U.S.A. economy grew by 2.5% in Q1.
 `;
   const doc = tokenize(content);
 
-  assert.strictEqual(doc.counts.word_count, 22);
+  // U.S.A. is now 1 word instead of 3, so count is 20
+  assert.strictEqual(doc.counts.word_count, 20);
   assert.strictEqual(doc.blocks[0].kind, "heading");
   assert.strictEqual(doc.sentences[1], "The U.S.A. economy grew by 2.5% in Q1.");
   assert.strictEqual(doc.blocks.length, 4); // Heading, Paragraph, List Item, List Item
@@ -29,7 +30,8 @@ Normal paragraph.
 
   assert.strictEqual(doc.counts.blockquote_count, 1);
   assert.strictEqual(doc.blocks[0].kind, "blockquote");
-  assert.strictEqual(doc.blocks[0].text, "> This is a blockquote. > It has two lines.");
+  // Continuation markers are now stripped
+  assert.strictEqual(doc.blocks[0].text, "> This is a blockquote. It has two lines.");
 });
 
 test("splitSentences respects abbreviations and decimals", () => {

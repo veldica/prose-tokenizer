@@ -93,8 +93,12 @@ export function splitParagraphBlocks(text: string): ParagraphBlock[] {
       }
       if (current.length === 0) {
         currentStart = index;
+        current.push(trimmed);
+      } else {
+        // Strip the blockquote marker(s) from continuation lines to avoid noise
+        const stripped = trimmed.replace(/^([\s\t]*>\s*)+/, "");
+        current.push(stripped);
       }
-      current.push(trimmed);
       currentEnd = index;
       mode = "blockquote";
       continue;

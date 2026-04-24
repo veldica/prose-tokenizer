@@ -27,6 +27,6 @@ export function getCharacterMetrics(text: string): CharacterMetrics {
   return {
     character_count: text.length,
     character_count_no_spaces: text.replace(/\s/g, "").length,
-    letter_count: text.replace(/[^a-zA-Z]/g, "").length,
+    letter_count: text.replace(/[^a-zA-Z0-9]/g, "").length,
   };
 }

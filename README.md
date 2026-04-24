@@ -4,16 +4,17 @@
 [![License](https://img.shields.io/npm/l/@veldica/prose-tokenizer)](LICENSE)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](package.json)
 
-A rule-based, deterministic prose tokenizer for English and Markdown. Designed for high-precision paragraph, sentence, and word segmentation in AI pipelines, LLM context window management, and editorial automation where consistency and character-accurate offsets matter.
+A high-precision, rule-based prose tokenizer and sentence segmentation library for English and Markdown. Designed for accurate splitting of paragraphs, sentences, and words in AI pipelines, LLM context window management, and editorial automation.
 
 ## Features
 
-- **Deterministic Rule-Based Engine**: No probabilistic models; consistent output every time.
-- **Markdown Aware**: Properly handles headings, list items, blockquotes, and Setext-style headers.
-- **Abbreviation Handling**: Intelligent sentence splitting that respects English abbreviations (e.g., "Dr.", "U.S.A.", "v1.0").
-- **Hierarchical Tokenization**: Access structure at the block, paragraph, sentence, or word level.
-- **Character Metrics**: Accurate counts for characters (with and without spaces) and raw letters.
-- **Zero Dependencies**: Lightweight and portable across Node.js, browsers, and Edge environments.
+- **Deterministic Rule-Based Engine**: Consistent, predictable output without probabilistic models.
+- **Markdown-Native Support**: Properly handles headings, list items, blockquotes, and Setext headers.
+- **Intelligent Sentence Segmentation**: Respects abbreviations (e.g., "Dr.", "U.S.A."), initials, and decimals.
+- **Flexible Exports**: Import the full library or specific modules for words, sentences, or paragraphs.
+- **Hierarchical Analysis**: Access structure at the block, paragraph, sentence, or word level.
+- **Character Metrics**: Accurate counts for characters (with/without spaces) and raw letters.
+- **Zero Dependencies**: Lightweight and ultra-fast; works in Node.js, browsers, and Edge.
 
 ## Installation
 
@@ -39,6 +40,15 @@ const doc = tokenize(content);
 console.log(doc.counts.word_count);     // 22
 console.log(doc.blocks[0].kind);        // "heading"
 console.log(doc.sentences[1]);          // "The U.S.A. economy grew by 2.5% in Q1."
+```
+
+## Modular Exports
+
+For optimal tree-shaking, you can import specific modules:
+
+```ts
+import { splitWords } from "@veldica/prose-tokenizer/words";
+import { splitSentences } from "@veldica/prose-tokenizer/sentences";
 ```
 
 ## API Reference

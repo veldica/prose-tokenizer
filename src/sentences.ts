@@ -6,7 +6,7 @@ const DECIMAL_PLACEHOLDER = "\u0000";
 const INNER_DOT_PLACEHOLDER = "\u0001";
 const INITIAL_PLACEHOLDER = "\u0002";
 
-const NON_TERMINAL_ABBREVIATIONS = new Set([
+const PREFIX_ABBREVIATIONS = new Set([
   "mr.",
   "mrs.",
   "ms.",
@@ -22,6 +22,16 @@ const NON_TERMINAL_ABBREVIATIONS = new Set([
   "sgt.",
   "lt.",
   "st.",
+  "rev.",
+  "hon.",
+  "gov.",
+  "pres.",
+  "sen.",
+  "rep.",
+  "mt.",
+]);
+
+const AMBIGUOUS_ABBREVIATIONS = new Set([
   "u.s.",
   "u.k.",
   "u.s.a.",
@@ -39,6 +49,46 @@ const NON_TERMINAL_ABBREVIATIONS = new Set([
   "oct.",
   "nov.",
   "dec.",
+  "approx.",
+  "avg.",
+  "dept.",
+  "est.",
+  "etc.",
+  "fig.",
+  "inc.",
+  "ltd.",
+  "min.",
+  "max.",
+  "vs.",
+]);
+
+const SENTENCE_STARTERS = new Set([
+  "the",
+  "a",
+  "an",
+  "he",
+  "she",
+  "it",
+  "they",
+  "we",
+  "i",
+  "you",
+  "this",
+  "that",
+  "there",
+  "who",
+  "when",
+  "where",
+  "while",
+  "but",
+  "and",
+  "if",
+  "then",
+  "my",
+  "our",
+  "his",
+  "her",
+  "their",
 ]);
 
 export function splitSentences(text: string): string[] {
@@ -102,7 +152,8 @@ function splitSentenceInternal(text: string): string[] {
   processed = processed.replace(/\b((?:[A-Za-z]\.){2,})(?=(?:\s|$|["')\]]))/g, (match) =>
     match.replace(/\.(?=.+\.)/g, INNER_DOT_PLACEHOLDER)
   );
-  processed = processed.replace(/\b([A-Z])\.(?=\s+[A-Z][a-z])/g, `$1${INITIAL_PLACEHOLDER}`);
+  // Only protect initials if they are at the start of a word and not part of an acronym
+  processed = processed.replace(/(^|[\s\t(])([A-Z])\.(?=\s+[A-Z][a-z])/g, `$1$2${INITIAL_PLACEHOLDER}`);
 
   const segments: string[] = [];
   let startIndex = 0;
@@ -140,10 +191,24 @@ function mergeFalseBoundaries(segments: string[]): string[] {
     const previous = merged[merged.length - 1];
     const previousLastToken = previous.split(/\s+/).at(-1)?.toLowerCase() ?? "";
     const nextFirstToken = segment.split(/\s+/)[0] ?? "";
+    const nextFirstTokenLower = nextFirstToken.toLowerCase();
 
-    if (NON_TERMINAL_ABBREVIATIONS.has(previousLastToken) && /^[A-Z0-9]/.test(nextFirstToken)) {
-      merged[merged.length - 1] = `${previous} ${segment}`;
-      continue;
+    // 1. Prefix-only abbreviations (Mr., Dr.) should almost always be merged
+    // if the next word starts with a capital letter or number.
+    if (PREFIX_ABBREVIATIONS.has(previousLastToken)) {
+      if (/^[A-Z0-9]/.test(nextFirstToken)) {
+        merged[merged.length - 1] = `${previous} ${segment}`;
+        continue;
+      }
+    }
+
+    // 2. Ambiguous abbreviations (U.S.A., Jan.) should only be merged if
+    // the next word is NOT a common sentence starter.
+    if (AMBIGUOUS_ABBREVIATIONS.has(previousLastToken)) {
+      if (!SENTENCE_STARTERS.has(nextFirstTokenLower) && /^[A-Z0-9]/.test(nextFirstToken)) {
+        merged[merged.length - 1] = `${previous} ${segment}`;
+        continue;
+      }
     }
 
     merged.push(segment);
